@@ -1,3 +1,4 @@
+import 'package:fin_track/main.dart';
 import 'package:fin_track/services/auth_services.dart';
 import 'package:fin_track/widgets/add_transaction_form.dart';
 import 'package:fin_track/widgets/get_user_name.dart';
@@ -28,8 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xfffad0c4),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
@@ -45,12 +48,29 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        physics: const BouncingScrollPhysics(),
+        child: Stack(
           children: [
-            HeroCard(
-              userId: userDetails,
+            Container(
+              height: mq.height,
+              width: mq.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xfffad0c4),
+                    Color(0xffffd1ff),
+                  ],
+                ),
+              ),
             ),
-            const TransactionPart(),
+            Column(
+              children: [
+                HeroCard(
+                  userId: userDetails,
+                ),
+                const TransactionPart(),
+              ],
+            ),
           ],
         ),
       ),

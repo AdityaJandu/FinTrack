@@ -12,6 +12,8 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      backgroundColor: const Color.fromARGB(255, 255, 211, 255),
+      indicatorColor: Colors.white,
       selectedIndex: selectedIndex,
       onDestinationSelected: onDestinationSelected,
       destinations: const <Widget>[

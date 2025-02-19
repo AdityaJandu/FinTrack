@@ -1,3 +1,4 @@
+import 'package:fin_track/screens/transaction_screen.dart';
 import 'package:fin_track/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,14 @@ class _TransactionPartState extends State<TransactionPart> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TransactionScreen(),
+                    ),
+                  );
+                },
                 child: const Text(
                   'View All',
                   style: TextStyle(

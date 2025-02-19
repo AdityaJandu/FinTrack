@@ -1,7 +1,8 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/main.dart';
-import 'package:fin_track/widgets/cards.dart';
 import 'package:flutter/material.dart';
+import 'credit_debit_card.dart';
 
 class HeroCard extends StatelessWidget {
   const HeroCard({super.key, required this.userId});
@@ -49,47 +50,55 @@ class CardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.sizeOf(context);
-    return SizedBox(
-      width: mq.width,
-      child: Column(
-        children: [
-          const Text(
-            "Total Balance",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+      child: Container(
+        width: mq.width,
+        height: mq.width / 1.7,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xffff8d6c),
+                Color(0xffe064f7),
+                Color(0xff00b2e7),
+              ],
+              transform: GradientRotation(pi / 6),
             ),
-          ),
-          Text(
-            "₹ ${data['remainingAmount']}",
-            style: const TextStyle(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: mq.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Cards(
-                    color: Colors.green,
-                    about: 'Credit',
-                    amount: "${data['totalCredit']}",
-                  ),
-                  const SizedBox(width: 20),
-                  Cards(
-                    color: Colors.red,
-                    about: 'Debit',
-                    amount: "${data['totalDebit']}",
-                  ),
-                ],
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                color: Colors.grey.shade400,
+                offset: const Offset(5, 5),
+              )
+            ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Total Balance",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
               ),
             ),
-          ),
-        ],
+            Text(
+              "₹ ${data['remainingAmount']}",
+              style: const TextStyle(
+                fontSize: 32,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: mq.height * .02,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+              child: CreditDebitCard(data: data),
+            ),
+          ],
+        ),
       ),
     );
   }

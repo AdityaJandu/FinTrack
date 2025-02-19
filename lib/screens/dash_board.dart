@@ -2,7 +2,7 @@ import 'package:fin_track/screens/challenge_screen.dart';
 import 'package:fin_track/screens/home_screen.dart';
 import 'package:fin_track/screens/transaction_screen.dart';
 import 'package:fin_track/services/auth_services.dart';
-import 'package:fin_track/widgets/nav_bar.dart';
+import 'package:fin_track/components/nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class DashBoard extends StatefulWidget {
@@ -32,12 +32,15 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
       body: pageViewList[currentIndex],
       bottomNavigationBar: NavBar(
-          selectedIndex: currentIndex,
-          onDestinationSelected: (int value) {
-            setState(() {
+        selectedIndex: currentIndex,
+        onDestinationSelected: (int value) {
+          setState(
+            () {
               currentIndex = value;
-            });
-          }),
+            },
+          );
+        },
+      ),
     );
   }
 }

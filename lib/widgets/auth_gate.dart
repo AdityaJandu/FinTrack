@@ -1,5 +1,5 @@
 import 'package:fin_track/screens/dash_board.dart';
-import 'package:fin_track/screens/login.dart';
+import 'package:fin_track/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class AuthGate extends StatelessWidget {
         if (snapshot.data != null) {
           return const DashBoard();
         }
-        return const Login();
+        return const LoginScreen();
       },
     );
   }

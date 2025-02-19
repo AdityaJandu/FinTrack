@@ -6,11 +6,13 @@ class Users {
   double remainingAmount;
   double totalCredit;
   double totalDebit;
+  String password;
 
   Users({
     required this.uid,
     required this.name,
     required this.email,
+    required this.password,
     required this.phoneNumber,
     this.remainingAmount = 0.0,
     this.totalCredit = 0.0,
@@ -27,6 +29,7 @@ class Users {
       'remainingAmount': remainingAmount,
       'totalCredit': totalCredit,
       'totalDebit': totalDebit,
+      'password': password,
     };
   }
 
@@ -40,6 +43,7 @@ class Users {
       remainingAmount: (map['remainingAmount'] ?? 0.0).toDouble(),
       totalCredit: (map['totalCredit'] ?? 0.0).toDouble(),
       totalDebit: (map['totalDebit'] ?? 0.0).toDouble(),
+      password: map['password'] ?? '',
     );
   }
 }

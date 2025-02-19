@@ -23,7 +23,7 @@ class TransactionCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.amber.shade100,
+          color: Colors.blueGrey.shade50,
         ),
         child: ListTile(
           leading: Stack(
@@ -33,13 +33,15 @@ class TransactionCard extends StatelessWidget {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
+                  color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
               FaIcon(
                 appIcons.getExpenseCategoryIcons(cardData['category']),
-                color: Colors.deepOrange.shade400,
+                color: cardData['type'] == 'credit'
+                    ? Colors.green.shade400
+                    : Colors.deepOrange.shade400,
               ),
             ],
           ),
