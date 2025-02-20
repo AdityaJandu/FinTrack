@@ -1,8 +1,9 @@
+import 'package:fin_track/components/bottom_nav_bar.dart';
 import 'package:fin_track/screens/challenge_screen.dart';
 import 'package:fin_track/screens/home_screen.dart';
+import 'package:fin_track/screens/account_settings_screen.dart';
 import 'package:fin_track/screens/transaction_screen.dart';
 import 'package:fin_track/services/auth_services.dart';
-import 'package:fin_track/components/nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class DashBoard extends StatefulWidget {
@@ -20,7 +21,8 @@ class _DashBoardState extends State<DashBoard> {
   var pageViewList = [
     const HomeScreen(),
     const ChallengeScreen(),
-    const TransactionScreen()
+    const TransactionScreen(),
+    const AccountSettingsScreen(),
   ];
 
   logOut() {
@@ -31,8 +33,8 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pageViewList[currentIndex],
-      bottomNavigationBar: NavBar(
-        selectedIndex: currentIndex,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: currentIndex,
         onDestinationSelected: (int value) {
           setState(
             () {

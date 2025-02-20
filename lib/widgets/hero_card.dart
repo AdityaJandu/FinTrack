@@ -4,6 +4,16 @@ import 'package:fin_track/main.dart';
 import 'package:flutter/material.dart';
 import 'credit_debit_card.dart';
 
+/*
+
+Hero Card
+----------
+
+A simple card to find all the deatils related the balance 
+=> total , credited and debited.
+
+*/
+
 class HeroCard extends StatelessWidget {
   const HeroCard({super.key, required this.userId});
 

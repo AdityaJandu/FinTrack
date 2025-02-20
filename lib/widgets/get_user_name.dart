@@ -1,6 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+/*
+
+To get the name of the user and other user details for building profile of the user.
+
+*/
+
 class GetUserName extends StatelessWidget {
   const GetUserName({super.key, required this.documentId});
   final String documentId;

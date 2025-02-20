@@ -1,5 +1,4 @@
 import 'package:fin_track/main.dart';
-import 'package:fin_track/services/auth_services.dart';
 import 'package:fin_track/widgets/add_transaction_form.dart';
 import 'package:fin_track/widgets/get_user_name.dart';
 import 'package:fin_track/widgets/hero_card.dart';
@@ -25,45 +24,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final String userDetails = FirebaseAuth.instance.currentUser!.uid;
-  final AuthServices _authServices = AuthServices();
 
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xfffad0c4),
+        centerTitle: false,
+        backgroundColor: const Color(0xfffbc2eb),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GetUserName(documentId: userDetails),
-              InkWell(
-                onTap: _authServices.logOut,
-                child: const Icon(Icons.person),
-              ),
-            ],
-          ),
+          child: GetUserName(documentId: userDetails),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Stack(
-          children: [
-            Container(
-              height: mq.height,
-              width: mq.width,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xfffad0c4),
-                    Color(0xffffd1ff),
-                  ],
-                ),
+      body: Stack(
+        children: [
+          Container(
+            height: mq.height,
+            width: mq.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xfffbc2eb),
+                  Color(0xffa6c1ee),
+                ],
+                begin: Alignment(0, 0),
+                end: Alignment(1, 1),
               ),
             ),
-            Column(
+          ),
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
               children: [
                 HeroCard(
                   userId: userDetails,
@@ -71,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 const TransactionPart(),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showDialog,
