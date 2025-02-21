@@ -1,5 +1,5 @@
 import 'package:fin_track/main.dart';
-import 'package:fin_track/widgets/add_transaction_form.dart';
+import 'package:fin_track/screens/add_transaction_screen.dart';
 import 'package:fin_track/widgets/get_user_name.dart';
 import 'package:fin_track/widgets/hero_card.dart';
 import 'package:fin_track/widgets/transaction_part.dart';
@@ -14,15 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  _showDialog() {
-    return showDialog(
-      context: context,
-      builder: (_) => const AlertDialog(
-        content: AddTransactionForm(),
-      ),
-    );
-  }
-
   final String userDetails = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -67,7 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showDialog,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const AddTransactionScreen(),
+            ),
+          );
+        },
         child: const Icon(
           Icons.add,
         ),

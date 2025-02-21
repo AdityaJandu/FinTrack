@@ -33,8 +33,8 @@ class TransactionCard extends StatelessWidget {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.blue.shade100,
+                  borderRadius: BorderRadius.circular(60),
                 ),
               ),
               FaIcon(

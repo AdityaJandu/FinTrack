@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/models/challenge.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class ChallengeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -69,7 +70,7 @@ class ChallengeService {
   }
 
   /// Join a challenge
-  Future<void> joinChallenge(String challengeId) async {
+  Future<void> joinChallenge(String challengeId, context) async {
     String userId = _auth.currentUser!.uid;
 
     try {
@@ -85,6 +86,23 @@ class ChallengeService {
         'status': 'ongoing',
       });
       log("Joined challenge successfully!");
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Joined Successfully"),
+          content: const Text("Press on tile to Start Saving Now."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog
+                Navigator.pop(context);
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       log("Error joining challenge: $e");
     }

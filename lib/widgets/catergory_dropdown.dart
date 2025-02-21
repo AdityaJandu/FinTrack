@@ -24,30 +24,33 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
     final selectedValue =
         categoryNames.contains(widget.catType) ? widget.catType : null;
 
-    return DropdownButton<String>(
-      hint: const Text("Select Category"),
-      value: selectedValue, // Use validated value
-      isExpanded: true,
-      items: categoryNames
-          .map(
-            (name) => DropdownMenuItem<String>(
-              value: name,
-              child: Row(
-                children: [
-                  Icon(
-                    appIcons.homeExpenseCatergory
-                        .firstWhere((e) => e["name"] == name)["icon"],
-                    size: 24,
-                    color: Colors.pink.shade200,
-                  ),
-                  SizedBox(width: mq.width * .05),
-                  Text(name),
-                ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: DropdownButton<String>(
+        hint: const Text("Select Category"),
+        value: selectedValue, // Use validated value
+        isExpanded: true,
+        items: categoryNames
+            .map(
+              (name) => DropdownMenuItem<String>(
+                value: name,
+                child: Row(
+                  children: [
+                    Icon(
+                      appIcons.homeExpenseCatergory
+                          .firstWhere((e) => e["name"] == name)["icon"],
+                      size: 24,
+                      color: Colors.pink.shade200,
+                    ),
+                    SizedBox(width: mq.width * .05),
+                    Text(name),
+                  ],
+                ),
               ),
-            ),
-          )
-          .toList(),
-      onChanged: widget.onChanged,
+            )
+            .toList(),
+        onChanged: widget.onChanged,
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:fin_track/models/challenge.dart';
+import 'package:fin_track/screens/add_challenge_screen.dart';
 import 'package:fin_track/services/challenge_services.dart';
 import 'package:flutter/material.dart';
 
@@ -11,77 +12,6 @@ class ChallengeScreen extends StatefulWidget {
 
 class _ChallengeScreenState extends State<ChallengeScreen> {
   final ChallengeService _challengeService = ChallengeService();
-  final _formKey = GlobalKey<FormState>();
-
-  ///  Function to show a dialog to create a user challenge
-  void _showCreateChallengeDialog() {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController goalAmountController = TextEditingController();
-    TextEditingController durationController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Create Your Challenge"),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: titleController,
-                  decoration:
-                      const InputDecoration(hintText: "Challenge Title"),
-                  validator: (value) => value!.isEmpty ? "Enter a title" : null,
-                ),
-                TextFormField(
-                  controller: goalAmountController,
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(hintText: "Goal Amount (₹)"),
-                  validator: (value) =>
-                      value!.isEmpty ? "Enter a goal amount" : null,
-                ),
-                TextFormField(
-                  controller: durationController,
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      const InputDecoration(hintText: "Duration (days)"),
-                  validator: (value) =>
-                      value!.isEmpty ? "Enter a duration" : null,
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  int goalAmount = int.tryParse(goalAmountController.text) ?? 0;
-                  int duration = int.tryParse(durationController.text) ?? 0;
-
-                  _challengeService.createChallenge(
-                    title: titleController.text,
-                    goalAmount: goalAmount,
-                    duration: duration,
-                    reward: "Gold Badge",
-                  );
-
-                  Navigator.pop(context);
-                  setState(() {});
-                }
-              },
-              child: const Text("Create"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _showChallengeCompleteDialog(String challengeId) {
     showDialog(
@@ -143,6 +73,10 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                     }
                   });
                   Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Savings added.")),
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Enter a valid amount")),
@@ -160,7 +94,16 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Challenges")),
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0),
+          child: Text(
+            "Challenges",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
       body: StreamBuilder<List<Challenge>>(
         stream: _challengeService.getChallengesWithUserProgress(),
         builder: (context, snapshot) {
@@ -216,8 +159,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                           : ElevatedButton(
                               onPressed: () async {
                                 // Join the challenge
-                                await _challengeService
-                                    .joinChallenge(challenge.id);
+                                await _challengeService.joinChallenge(
+                                    challenge.id, context);
                                 // Refresh the UI after joining
                                 setState(() {
                                   isJoined != isJoined;
@@ -234,7 +177,14 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showCreateChallengeDialog,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const AddChallengeScreen(),
+            ),
+          );
+        },
         tooltip: "Create Challenge",
         child: const Icon(Icons.add),
       ),
