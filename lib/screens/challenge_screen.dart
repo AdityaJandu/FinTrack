@@ -1,3 +1,4 @@
+import 'package:fin_track/components/challenge_card.dart';
 import 'package:fin_track/models/challenge.dart';
 import 'package:fin_track/screens/add_challenge_screen.dart';
 import 'package:fin_track/services/challenge_services.dart';
@@ -13,6 +14,7 @@ class ChallengeScreen extends StatefulWidget {
 class _ChallengeScreenState extends State<ChallengeScreen> {
   final ChallengeService _challengeService = ChallengeService();
 
+  // When a challenge is completed.
   void _showChallengeCompleteDialog(String challengeId) {
     showDialog(
       context: context,
@@ -23,10 +25,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
               const Text("Congratulations! You've completed your challenge."),
           actions: [
             TextButton(
-              onPressed: () {
-                // Close the dialog
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               child: const Text("OK"),
             ),
           ],
@@ -35,7 +34,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     );
   }
 
-  ///  Function to show an input dialog for adding savings
+  // When you want to add savings to complete the challenge or partially completing challenge.
   void _showAddSavingsDialog(
       Challenge challenge, int remainingAmount, Function(int) onUpdate) {
     TextEditingController amountController = TextEditingController();
@@ -61,26 +60,19 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                 if (amount > 0 && amount <= remainingAmount) {
                   _challengeService.updateSavings(challenge.id, amount,
                       (updatedAmount) {
-                    // Update UI instantly
                     onUpdate(updatedAmount);
 
-                    // Check if the challenge is completed
                     if (updatedAmount >= challenge.goalAmount) {
-                      _showChallengeCompleteDialog(
-                          challenge.id); // Show completion dialog
-                      _challengeService.markChallengeComplete(
-                          challenge.id); // Mark the challenge as complete
+                      _showChallengeCompleteDialog(challenge.id);
+                      _challengeService.markChallengeComplete(challenge.id);
                     }
                   });
                   Navigator.pop(context);
-
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Savings added.")),
-                  );
+                      const SnackBar(content: Text("Savings added.")));
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Enter a valid amount")),
-                  );
+                      const SnackBar(content: Text("Enter a valid amount")));
                 }
               },
               child: const Text("Add"),
@@ -111,7 +103,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Transform.scale(
+                scale: 1.5,
+                child: const CircularProgressIndicator.adaptive(),
+              ),
+            );
           }
 
           var challenges = snapshot.data!;
@@ -127,50 +124,20 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                   challenge.goalAmount - challenge.savedAmount;
               bool isJoined = challenge.savedAmount > 0;
 
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: InkWell(
-                  onTap: () {
-                    _showAddSavingsDialog(challenge, remainingAmount,
-                        (updatedAmount) {
-                      setState(() {}); // UI updates instantly
-                    });
-                  },
-                  child: Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(challenge.title,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: isJoined
-                          ? Text('Remaining: ₹$remainingAmount to complete')
-                          : Text(
-                              'Goal: ₹${challenge.goalAmount} in ${challenge.duration} days'),
-                      trailing: isJoined
-                          ? ElevatedButton(
-                              onPressed: () => _showAddSavingsDialog(
-                                  challenge, remainingAmount, (updatedAmount) {
-                                setState(() {}); // UI updates instantly
-                              }),
-                              child: const Text("Add Savings"),
-                            )
-                          : ElevatedButton(
-                              onPressed: () async {
-                                // Join the challenge
-                                await _challengeService.joinChallenge(
-                                    challenge.id, context);
-                                // Refresh the UI after joining
-                                setState(() {
-                                  isJoined != isJoined;
-                                });
-                              },
-                              child: const Text("Join"),
-                            ),
-                    ),
-                  ),
-                ),
+              return ChallengeCard(
+                challenge: challenge,
+                remainingAmount: remainingAmount,
+                isJoined: isJoined,
+                onAddSavings: () {
+                  _showAddSavingsDialog(challenge, remainingAmount,
+                      (updatedAmount) {
+                    setState(() {});
+                  });
+                },
+                onJoin: () async {
+                  await _challengeService.joinChallenge(challenge.id, context);
+                  setState(() {});
+                },
               );
             },
           );
@@ -178,12 +145,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const AddChallengeScreen(),
-            ),
-          );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const AddChallengeScreen()));
         },
         tooltip: "Create Challenge",
         child: const Icon(Icons.add),

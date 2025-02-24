@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'transaction_card.dart';
+import '../components/transaction_card.dart';
 
 class RecentTransaction extends StatelessWidget {
   RecentTransaction({
@@ -36,15 +36,16 @@ class RecentTransaction extends StatelessWidget {
         var data = snapshot.data!.docs;
 
         return ListView.builder(
-            itemCount: data.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, int index) {
-              var cardData = data[index];
-              return TransactionCard(
-                cardData: cardData,
-              );
-            });
+          itemCount: data.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, int index) {
+            var cardData = data[index];
+            return TransactionCard(
+              cardData: cardData,
+            );
+          },
+        );
       },
     );
   }

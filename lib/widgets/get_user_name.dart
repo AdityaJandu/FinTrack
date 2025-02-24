@@ -36,7 +36,7 @@ class GetUserName extends StatelessWidget {
           );
         }
 
-        return const Text("Loading...");
+        return const CircularProgressIndicator.adaptive();
       },
     );
   }

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/main.dart';
 import 'package:flutter/material.dart';
-import 'credit_debit_card.dart';
+import '../components/credit_debit_card.dart';
 
 /*
 

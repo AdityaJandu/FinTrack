@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fin_track/main.dart';
 import 'package:fin_track/screens/register_screen.dart';
 import 'package:fin_track/services/auth_services.dart';
@@ -21,24 +23,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final AuthServices _authServices = AuthServices();
 
-  bool isLoading = false;
+  Future<void> _submitForm(context) async {
+    showDialog(
+      context: context,
+      builder: (_) => Center(
+        child: Transform.scale(
+          scale: 1.5,
+          child: const CircularProgressIndicator.adaptive(),
+        ),
+      ),
+    );
+    try {
+      if (_formKey.currentState!.validate()) {
+        var data = {
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        };
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
+        await _authServices.logInUser(data, context);
 
-      var data = {
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      };
-
-      await _authServices.logInUser(data, context);
-
-      setState(() {
-        isLoading = false;
-      });
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      log(e.toString());
     }
   }
 
@@ -107,21 +115,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: mq.width,
                     child: ElevatedButton(
                       onPressed: () {
-                        _submitForm();
+                        _submitForm(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.pink.shade200,
                         foregroundColor: Colors.black,
                       ),
-                      child: isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              "Submit",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),

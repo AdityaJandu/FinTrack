@@ -1,5 +1,4 @@
 import 'package:fin_track/components/circular_icon.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CreditDebitCard extends StatelessWidget {

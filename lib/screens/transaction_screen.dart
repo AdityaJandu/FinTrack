@@ -1,6 +1,6 @@
 import 'package:fin_track/services/auth_services.dart';
 import 'package:fin_track/widgets/catergory_lists.dart';
-import 'package:fin_track/widgets/my_tab_bar.dart';
+import 'package:fin_track/components/my_tab_bar.dart';
 import 'package:fin_track/components/time_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,12 +48,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Expanded(
             child: MyTabBar(category: category, monthYear: monthYear),
           ),
-          // InkWell(
-          //   child: const Text('Log-Out'),
-          //   onTap: () {
-          //     authServices.logOut();
-          //   },
-          // ),
         ],
       ),
     );
