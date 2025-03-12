@@ -106,7 +106,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             return Center(
               child: Transform.scale(
                 scale: 1.5,
-                child: const CircularProgressIndicator.adaptive(),
+                child: CircularProgressIndicator.adaptive(
+                  backgroundColor: Colors.pink.shade200,
+                ),
               ),
             );
           }

@@ -32,6 +32,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
         goalAmount: goalAmount,
         duration: duration,
         reward: "Gold Badge",
+        timeStamp: DateTime.now(),
       );
 
       Navigator.pop(context);

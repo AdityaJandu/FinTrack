@@ -15,6 +15,7 @@ class ChallengeService {
     required int goalAmount,
     required int duration,
     required String reward,
+    required DateTime timeStamp,
   }) async {
     try {
       await _firestore
@@ -26,6 +27,7 @@ class ChallengeService {
         'goalAmount': goalAmount,
         'duration': duration,
         'reward': reward,
+        'timeStamp': timeStamp,
       });
       log("Challenge created successfully!");
     } catch (e) {
@@ -39,8 +41,9 @@ class ChallengeService {
 
     return _firestore
         .collection('users')
-        .doc(_auth.currentUser!.uid)
+        .doc(userId)
         .collection('challenges')
+        .orderBy('timeStamp', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
       List<Challenge> challenges = [];
@@ -51,7 +54,7 @@ class ChallengeService {
         // Fetch user's savedAmount from 'userChallenges'
         var userChallengeQuery = await _firestore
             .collection('users')
-            .doc(_auth.currentUser!.uid)
+            .doc(userId)
             .collection('userChallenges')
             .where('userId', isEqualTo: userId)
             .where('challengeId', isEqualTo: doc.id)
@@ -76,7 +79,7 @@ class ChallengeService {
     try {
       await _firestore
           .collection('users')
-          .doc(_auth.currentUser!.uid)
+          .doc(userId)
           .collection('userChallenges')
           .add({
         'userId': userId,
@@ -116,7 +119,7 @@ class ChallengeService {
     try {
       var query = await _firestore
           .collection('users')
-          .doc(_auth.currentUser!.uid)
+          .doc(userId)
           .collection('userChallenges')
           .where('userId', isEqualTo: userId)
           .where('challengeId', isEqualTo: challengeId)
@@ -129,7 +132,7 @@ class ChallengeService {
         // Fetch goalAmount from `challenges` collection
         var challengeSnapshot = await _firestore
             .collection('users')
-            .doc(_auth.currentUser!.uid)
+            .doc(userId)
             .collection('challenges')
             .doc(challengeId)
             .get();
@@ -142,7 +145,7 @@ class ChallengeService {
         // Update Firestore
         await _firestore
             .collection('users')
-            .doc(_auth.currentUser!.uid)
+            .doc(userId)
             .collection('userChallenges')
             .doc(userChallengeDoc.id)
             .update({
@@ -154,7 +157,7 @@ class ChallengeService {
         if (newAmount >= goalAmount) {
           await _firestore
               .collection('users')
-              .doc(_auth.currentUser!.uid)
+              .doc(userId)
               .collection('challenges')
               .doc(challengeId)
               .delete();
@@ -203,7 +206,7 @@ class ChallengeService {
     try {
       var query = await _firestore
           .collection('users')
-          .doc(_auth.currentUser!.uid)
+          .doc(userId)
           .collection('userChallenges')
           .where('userId', isEqualTo: userId)
           .where('challengeId', isEqualTo: challengeId)
@@ -216,7 +219,7 @@ class ChallengeService {
         // Fetch goalAmount from `challenges` collection
         var challengeSnapshot = await _firestore
             .collection('users')
-            .doc(_auth.currentUser!.uid)
+            .doc(userId)
             .collection('challenges')
             .doc(challengeId)
             .get();
@@ -229,7 +232,7 @@ class ChallengeService {
           // Update the challenge status to 'completed'
           await _firestore
               .collection('users')
-              .doc(_auth.currentUser!.uid)
+              .doc(userId)
               .collection('userChallenges')
               .doc(userChallengeDoc.id)
               .update({

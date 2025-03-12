@@ -47,7 +47,10 @@ class TransactionLists extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Text("No transactions found.");
+            return Text(
+              "No $type transactions found in $monthYear.\nAdd new transactions now.",
+              textAlign: TextAlign.center,
+            );
           }
 
           var data = snapshot.data!.docs;

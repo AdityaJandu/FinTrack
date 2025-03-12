@@ -33,7 +33,9 @@ class TransactionCard extends StatelessWidget {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
+                  color: cardData['type'] == 'credit'
+                      ? Colors.blue.shade100
+                      : Colors.red.shade100,
                   borderRadius: BorderRadius.circular(60),
                 ),
               ),
