@@ -47,9 +47,12 @@ class TransactionLists extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Text(
-              "No $type transactions found in $monthYear.\nAdd new transactions now.",
-              textAlign: TextAlign.center,
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                "No ${category.toLowerCase()} and $type transactions found in $monthYear.\nAdd new transactions now.",
+                textAlign: TextAlign.center,
+              ),
             );
           }
 
