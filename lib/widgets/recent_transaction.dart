@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fin_track/services/transaction_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class RecentTransaction extends StatelessWidget {
   });
 
   final String userDetails = FirebaseAuth.instance.currentUser!.uid;
+  final TransactionService _service = TransactionService();
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,51 @@ class RecentTransaction extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, int index) {
             var cardData = data[index];
-            return TransactionCard(
-              cardData: cardData,
+            return Dismissible(
+              key: Key(cardData.id),
+              direction: DismissDirection.endToStart,
+              background: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.red.shade400,
+                      borderRadius: BorderRadius.circular(10)),
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: const Icon(Icons.delete_outline, color: Colors.white),
+                ),
+              ),
+              confirmDismiss: (direction) async {
+                bool? confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Delete Transaction?"),
+                    content: Text(
+                        "Are you sure you want to delete the '${cardData['title']}' transaction?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text("Cancel")),
+                      TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text("Delete",
+                              style: TextStyle(color: Colors.red))),
+                    ],
+                  ),
+                );
+                return confirm ?? false;
+              },
+              onDismissed: (direction) {
+                _service.deleteTransaction(
+                  transactionId: cardData.id,
+                  amount: cardData['amount'],
+                  transactionType: cardData['type'],
+                );
+              },
+              child: TransactionCard(
+                cardData: cardData,
+              ),
             );
           },
         );

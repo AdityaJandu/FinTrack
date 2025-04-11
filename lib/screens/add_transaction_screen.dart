@@ -25,7 +25,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final AppValidator appValidator = AppValidator();
   var uid = const Uuid();
 
-  Future<void> _submitForm(context) async {
+  @override
+  void dispose() {
+    titleController.dispose();
+    ammountController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitForm() async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -44,9 +52,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           SnackBar(content: Text(e.toString())),
         );
       } finally {
-        setState(() {
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
   }
@@ -168,37 +178,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     SizedBox(
                       height: mq.height * .02,
                     ),
-                    InkWell(
-                      onTap: () => _submitForm(context),
-                      child: Container(
-                        width: mq.width * .7,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 173, 173, 173),
+                    ElevatedButton.icon(
+                      onPressed: isLoading ? null : _submitForm,
+                      icon: isLoading
+                          ? Container(
+                              width: 24,
+                              height: 24,
+                              padding: const EdgeInsets.all(2.0),
+                              child: const CircularProgressIndicator.adaptive(
+                                  strokeWidth: 3,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white)),
+                            )
+                          : const Icon(Icons.add_task_rounded),
+                      label:
+                          Text(isLoading ? "Creating..." : "Add Transaction"),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(mq.width * .7, 50),
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Icons.save_outlined,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                "Add Transaction",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
+                    SizedBox(height: mq.height * .02),
                   ],
                 ),
               ),

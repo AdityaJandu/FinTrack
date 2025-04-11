@@ -1,250 +1,305 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/models/challenge.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class ChallengeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Upload a new challenge to Firestore
-  Future<void> createChallenge({
+  String? get _userId => _auth.currentUser?.uid;
+
+  // Create challenges:
+  Future<String?> createChallenge({
     required String title,
     required int goalAmount,
     required int duration,
-    required String reward,
-    required DateTime timeStamp,
+    String? reward,
   }) async {
+    final userId = _userId;
+    if (userId == null) {
+      log("Error: User not logged in.");
+      return null;
+    }
     try {
-      await _firestore
+      DocumentReference docRef = await _firestore
           .collection('users')
-          .doc(_auth.currentUser!.uid)
+          .doc(userId)
           .collection('challenges')
           .add({
         'title': title,
         'goalAmount': goalAmount,
         'duration': duration,
-        'reward': reward,
-        'timeStamp': timeStamp,
+        if (reward != null && reward.isNotEmpty) 'reward': reward,
+        'timeStamp': FieldValue.serverTimestamp(),
       });
-      log("Challenge created successfully!");
+      log("Challenge created successfully with ID: ${docRef.id}");
+      return docRef.id;
     } catch (e) {
       log("Error creating challenge: $e");
+      return null;
     }
   }
 
-  /// Get challenges + user progress
+  // Get Challenges :
   Stream<List<Challenge>> getChallengesWithUserProgress() {
-    String userId = _auth.currentUser!.uid;
+    final userId = _userId;
+    if (userId == null) {
+      log("Error: User not logged in for streaming challenges.");
+      return Stream.value([]);
+    }
 
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('challenges')
-        .orderBy('timeStamp', descending: true)
-        .snapshots()
-        .asyncMap((snapshot) async {
+    final userChallengesRef =
+        _firestore.collection('users').doc(userId).collection('userChallenges');
+
+    final Set<String> loggedMissingDefs = {};
+
+    return userChallengesRef.snapshots().asyncMap((userProgressSnapshot) async {
       List<Challenge> challenges = [];
+      loggedMissingDefs.clear();
 
-      for (var doc in snapshot.docs) {
-        doc.data();
-
-        // Fetch user's savedAmount from 'userChallenges'
-        var userChallengeQuery = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('userChallenges')
-            .where('userId', isEqualTo: userId)
-            .where('challengeId', isEqualTo: doc.id)
-            .get();
-
-        int savedAmount = 0;
-        if (userChallengeQuery.docs.isNotEmpty) {
-          savedAmount = userChallengeQuery.docs.first['savedAmount'];
-        }
-
-        challenges.add(Challenge.fromFirestore(doc, savedAmount: savedAmount));
+      if (userProgressSnapshot.docs.isEmpty) {
+        return challenges;
       }
 
-      return challenges;
-    });
-  }
+      final challengeIds = userProgressSnapshot.docs
+          .map((doc) => doc.data()['challengeId'] as String?)
+          .where((id) => id != null)
+          .toSet()
+          .toList();
 
-  /// Join a challenge
-  Future<void> joinChallenge(String challengeId, context) async {
-    String userId = _auth.currentUser!.uid;
-
-    try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('userChallenges')
-          .add({
-        'userId': userId,
-        'challengeId': challengeId,
-        'savedAmount': 0,
-        'startDate': Timestamp.now(),
-        'status': 'ongoing',
-      });
-      log("Joined challenge successfully!");
-
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Joined Successfully"),
-          content: const Text("Press on tile to Start Saving Now."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Close the dialog
-                Navigator.pop(context);
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    } catch (e) {
-      log("Error joining challenge: $e");
-    }
-  }
-
-  /// Update user savings progress and remove challenge if completed
-  Future<void> updateSavings(
-      String challengeId, int amount, Function onUpdate) async {
-    String userId = _auth.currentUser!.uid;
-
-    try {
-      var query = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('userChallenges')
-          .where('userId', isEqualTo: userId)
-          .where('challengeId', isEqualTo: challengeId)
-          .get();
-
-      if (query.docs.isNotEmpty) {
-        var userChallengeDoc = query.docs.first;
-        var currentSavedAmount = userChallengeDoc['savedAmount'];
-
-        // Fetch goalAmount from `challenges` collection
-        var challengeSnapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('challenges')
-            .doc(challengeId)
-            .get();
-        if (!challengeSnapshot.exists) return;
-        var goalAmount = challengeSnapshot['goalAmount'];
-
-        var newAmount = currentSavedAmount + amount;
-        var newStatus = newAmount >= goalAmount ? 'completed' : 'ongoing';
-
-        // Update Firestore
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('userChallenges')
-            .doc(userChallengeDoc.id)
-            .update({
-          'savedAmount': newAmount,
-          'status': newStatus,
-        });
-
-        // If challenge is completed, remove it from Firestore
-        if (newAmount >= goalAmount) {
-          await _firestore
+      Map<String, DocumentSnapshot<Map<String, dynamic>>> challengeDefsMap = {};
+      if (challengeIds.isNotEmpty) {
+        List<Future<QuerySnapshot<Map<String, dynamic>>>> fetchFutures = [];
+        for (int i = 0; i < challengeIds.length; i += 30) {
+          int end =
+              (i + 30 < challengeIds.length) ? i + 30 : challengeIds.length;
+          List<String?> chunk = challengeIds.sublist(i, end);
+          fetchFutures.add(_firestore
               .collection('users')
               .doc(userId)
               .collection('challenges')
-              .doc(challengeId)
-              .delete();
-          log("Challenge completed and removed from Firestore.");
+              .where(FieldPath.documentId, whereIn: chunk)
+              .get());
         }
 
-        // Immediately update the UI
-        onUpdate(newAmount);
-
-        log("Updated savings successfully!");
-      } else {
-        log("Error: User challenge entry not found!");
+        try {
+          final List<QuerySnapshot<Map<String, dynamic>>> results =
+              await Future.wait(fetchFutures);
+          for (final snapshot in results) {
+            for (var doc in snapshot.docs) {
+              challengeDefsMap[doc.id] = doc;
+            }
+          }
+        } catch (e) {
+          log("Error fetching challenge definitions batch: $e");
+        }
       }
-    } catch (e) {
-      log("Error updating savings: $e");
-    }
-  }
 
-  /// Create a user-generated challenge
-  Future<void> createUserChallenge({
-    required String title,
-    required int goalAmount,
-    required int duration,
-  }) async {
-    try {
-      await _firestore
-          .collection('users')
-          .doc(_auth.currentUser!.uid)
-          .collection('challenges')
-          .add({
-        'title': title,
-        'goalAmount': goalAmount,
-        'duration': duration,
-        // No reward is required for user-created challenges
+      for (var userProgressDoc in userProgressSnapshot.docs) {
+        final progressData = userProgressDoc.data();
+        final challengeId = progressData['challengeId'] as String?;
+
+        if (challengeId == null) continue;
+
+        final challengeDefDoc = challengeDefsMap[challengeId];
+
+        if (challengeDefDoc == null || !challengeDefDoc.exists) {
+          if (loggedMissingDefs.add(challengeId)) {
+            log("Warning: Challenge definition not found for joined challenge ID: $challengeId. Skipping.");
+          }
+          continue;
+        }
+
+        final int savedAmount = progressData['savedAmount'] ?? 0;
+        final String status = progressData['status'] ?? 'unknown';
+        final Timestamp? startDate = progressData['startDate'];
+
+        challenges.add(Challenge.fromFirestore(
+          challengeDefDoc,
+          savedAmount: savedAmount,
+          status: status,
+          startDate: startDate,
+        ));
+      }
+
+      challenges.sort((a, b) {
+        int statusCompare =
+            _statusSortOrder(a.status).compareTo(_statusSortOrder(b.status));
+        if (statusCompare != 0) return statusCompare;
+        return (b.startDate ?? Timestamp(0, 0))
+            .compareTo(a.startDate ?? Timestamp(0, 0));
       });
-      log("User challenge created successfully!");
-    } catch (e) {
-      log("Error creating user challenge: $e");
+
+      return challenges;
+    }).handleError((error, stackTrace) {
+      log("Error in getChallengesWithUserProgress stream: $error",
+          error: error, stackTrace: stackTrace);
+      return <Challenge>[];
+    });
+  }
+
+  int _statusSortOrder(String status) {
+    switch (status) {
+      case 'ongoing':
+        return 0;
+      case 'completed':
+        return 1;
+      default:
+        return 2;
     }
   }
 
-  /// Update user challenge status when complete
-  Future<void> markChallengeComplete(String challengeId) async {
-    String userId = _auth.currentUser!.uid;
+  // Join challenge:
+  Future<bool> joinChallenge(String challengeId) async {
+    final userId = _userId;
+    if (userId == null) {
+      log("Error: User not logged in.");
+      return false;
+    }
+
+    final userChallengeRef =
+        _firestore.collection('users').doc(userId).collection('userChallenges');
 
     try {
-      var query = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('userChallenges')
-          .where('userId', isEqualTo: userId)
+      final existingJoinQuery = await userChallengeRef
           .where('challengeId', isEqualTo: challengeId)
+          .limit(1)
           .get();
 
-      if (query.docs.isNotEmpty) {
-        var userChallengeDoc = query.docs.first;
-        var currentSavedAmount = userChallengeDoc['savedAmount'];
-
-        // Fetch goalAmount from `challenges` collection
-        var challengeSnapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('challenges')
-            .doc(challengeId)
-            .get();
-
-        if (!challengeSnapshot.exists) return;
-        var goalAmount = challengeSnapshot['goalAmount'];
-
-        // Check if the challenge is complete
-        if (currentSavedAmount >= goalAmount) {
-          // Update the challenge status to 'completed'
-          await _firestore
-              .collection('users')
-              .doc(userId)
-              .collection('userChallenges')
-              .doc(userChallengeDoc.id)
-              .update({
-            'status': 'completed',
-          });
-
-          // Optionally, remove the challenge or perform other actions
-          log("Challenge completed!");
-        }
+      if (existingJoinQuery.docs.isNotEmpty) {
+        log("User already joined challenge: $challengeId");
+        return true;
       }
+
+      await userChallengeRef.add({
+        'userId': userId,
+        'challengeId': challengeId,
+        'savedAmount': 0,
+        'startDate': FieldValue.serverTimestamp(),
+        'status': 'ongoing',
+      });
+      log("Joined challenge '$challengeId' successfully!");
+      return true;
     } catch (e) {
-      log("Error marking challenge as complete: $e");
+      log("Error joining challenge '$challengeId': $e");
+      return false;
+    }
+  }
+
+  // Updates savings:
+  Future<int?> updateSavings(String challengeId, int amountToAdd) async {
+    final userId = _userId;
+    if (userId == null) {
+      log("Error: User not logged in.");
+      return null;
+    }
+    if (amountToAdd <= 0) {
+      log("Error: Amount to add must be positive.");
+      return null;
+    }
+
+    final userChallengesRef =
+        _firestore.collection('users').doc(userId).collection('userChallenges');
+
+    try {
+      final query = await userChallengesRef
+          .where('challengeId', isEqualTo: challengeId)
+          .limit(1)
+          .get();
+
+      if (query.docs.isEmpty) {
+        log("Error: User challenge entry not found for challengeId: $challengeId");
+        return null;
+      }
+
+      var userChallengeDocRef = query.docs.first.reference;
+      var userChallengeData = query.docs.first.data();
+      var currentSavedAmount = userChallengeData['savedAmount'] ?? 0;
+
+      if (userChallengeData['status'] == 'completed') {
+        log("Attempted to add savings to already completed challenge: $challengeId");
+        return currentSavedAmount;
+      }
+
+      final challengeDefRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('challenges')
+          .doc(challengeId);
+      final challengeDefSnapshot = await challengeDefRef.get();
+
+      if (!challengeDefSnapshot.exists) {
+        log("Error: Challenge definition not found for challengeId: $challengeId during update.");
+        return null;
+      }
+      var goalAmount = challengeDefSnapshot.data()?['goalAmount'] ?? 0;
+
+      var newSavedAmount = currentSavedAmount + amountToAdd;
+      String newStatus = 'ongoing';
+
+      if (goalAmount > 0 && newSavedAmount >= goalAmount) {
+        newStatus = 'completed';
+        log("Challenge '$challengeId' goal reached or exceeded!");
+      }
+
+      await userChallengeDocRef.update({
+        'savedAmount': newSavedAmount,
+        'status': newStatus,
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+
+      log("Updated savings for challenge '$challengeId'. New amount: $newSavedAmount, Status: $newStatus");
+      return newSavedAmount;
+    } catch (e) {
+      log("Error updating savings for challenge '$challengeId': $e");
+      return null;
+    }
+  }
+
+  // To delete challenges:
+  Future<bool> deleteChallenge(String challengeId) async {
+    final userId = _userId;
+    if (userId == null) {
+      log("Error: User not logged in.");
+      return false;
+    }
+
+    final challengeDefRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('challenges')
+        .doc(challengeId);
+    final userChallengesQuery = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('userChallenges')
+        .where('challengeId', isEqualTo: challengeId);
+
+    try {
+      WriteBatch batch = _firestore.batch();
+
+      batch.delete(challengeDefRef);
+      log("Scheduled deletion for challenge definition: $challengeId");
+
+      QuerySnapshot progressSnapshot = await userChallengesQuery.get();
+      if (progressSnapshot.docs.isNotEmpty) {
+        for (var doc in progressSnapshot.docs) {
+          batch.delete(doc.reference);
+          log("Scheduled deletion for user challenge progress: ${doc.id} (for challenge $challengeId)");
+        }
+      } else {
+        log("No user progress record found for challenge $challengeId to delete.");
+      }
+
+      await batch.commit();
+      log("Successfully deleted challenge and associated progress for: $challengeId");
+      return true;
+    } catch (e) {
+      log("Error deleting challenge $challengeId: $e");
+      return false;
     }
   }
 }
