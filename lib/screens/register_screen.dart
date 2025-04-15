@@ -169,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         foregroundColor: Colors.black,
                       ),
                       child: isLoading
-                          ? const CircularProgressIndicator()
+                          ? const CircularProgressIndicator.adaptive()
                           : const Text(
                               "Submit",
                               style: TextStyle(

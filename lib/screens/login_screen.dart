@@ -20,19 +20,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   AppValidator appValidator = AppValidator();
+  bool isLoading = false;
 
   final AuthServices _authServices = AuthServices();
 
   Future<void> _submitForm(context) async {
-    showDialog(
-      context: context,
-      builder: (_) => Center(
-        child: Transform.scale(
-          scale: 1.5,
-          child: const CircularProgressIndicator.adaptive(),
-        ),
-      ),
-    );
+    setState(() {
+      isLoading = true;
+    });
     try {
       if (_formKey.currentState!.validate()) {
         var data = {
@@ -41,12 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
         };
 
         await _authServices.logInUser(data, context);
-
-        Navigator.pop(context);
       }
     } catch (e) {
-      Navigator.pop(context);
       log(e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -121,13 +117,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         backgroundColor: Colors.pink.shade200,
                         foregroundColor: Colors.black,
                       ),
-                      child: const Text(
-                        "Submit",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Text(
+                              "Submit",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 30),
