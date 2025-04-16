@@ -47,6 +47,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           transactionType: type,
         );
         Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Transaction Added Successfully."),
+          ),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
