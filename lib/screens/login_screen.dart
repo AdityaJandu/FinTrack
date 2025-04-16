@@ -42,6 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } finally {
       setState(() {
         isLoading = false;
+        _emailController.clear();
+        _passwordController.clear();
       });
     }
   }

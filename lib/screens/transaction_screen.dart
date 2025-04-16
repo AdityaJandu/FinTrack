@@ -32,7 +32,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Transactions")),
+      appBar: AppBar(
+        title: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Text(
+            "Transactions",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        centerTitle: false,
+      ),
       body: Column(
         children: [
           TimeLine(onChanged: (String? value) {

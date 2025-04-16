@@ -81,6 +81,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } finally {
         setState(() {
           isLoading = false;
+          _nameController.clear();
+          _emailController.clear();
+          _phoneNumberController.clear();
+          _passwordController.clear();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const LoginScreen(),
+            ),
+          );
         });
       }
     }

@@ -232,9 +232,14 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Text(
+            "Challenges",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         centerTitle: false,
-        title: const Text("Savings Challenges",
-            style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: StreamBuilder<List<Challenge>>(
         stream: _challengeService.getChallengesWithUserProgress(),
