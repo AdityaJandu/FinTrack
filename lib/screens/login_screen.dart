@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fin_track/components/my_text_form_field.dart';
 import 'package:fin_track/main.dart';
 import 'package:fin_track/screens/register_screen.dart';
 import 'package:fin_track/services/auth_services.dart';
@@ -42,8 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } finally {
       setState(() {
         isLoading = false;
-        _emailController.clear();
-        _passwordController.clear();
       });
     }
   }
@@ -74,81 +73,100 @@ class _LoginScreenState extends State<LoginScreen> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
+                  SizedBox(
+                    height: mq.height * .04,
+                  ),
                   const Text(
-                    "Login Now",
+                    "Login Now!",
                     style: TextStyle(
-                      fontSize: 40,
+                      fontSize: 34,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  TextFormField(
+                  const SizedBox(height: 50),
+                  MyTextFormField(
                     controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      label: const Text("e-Mail"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
                     validator: appValidator.validateEmail,
+                    description: 'e-Mail',
+                    obscureText: false,
                   ),
                   const SizedBox(height: 20),
-                  TextFormField(
+                  MyTextFormField(
                     controller: _passwordController,
-                    decoration: InputDecoration(
-                      label: const Text("Password"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
                     validator: appValidator.validatePassword,
+                    description: 'Password',
+                    obscureText: true,
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    width: mq.width,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _submitForm(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink.shade200,
-                        foregroundColor: Colors.black,
-                      ),
-                      child: isLoading
-                          ? const CircularProgressIndicator.adaptive()
-                          : const Text(
-                              "Submit",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterScreen(),
-                        ),
-                      );
-                    },
+                  const SizedBox(height: 20),
+                  // Forgot Password
+                  Padding(
+                    padding: EdgeInsets.only(left: mq.width * .47),
                     child: const Text(
-                      "Create an account",
+                      "Forgot Password",
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: mq.width * .05,
+                    ),
+                    child: SizedBox(
+                      height: 50,
+                      width: mq.width,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _submitForm(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pink.shade200,
+                          foregroundColor: Colors.black,
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator.adaptive()
+                            : const Text(
+                                "Submit",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Not a member?",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Register now.",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

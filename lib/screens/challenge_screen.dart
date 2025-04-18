@@ -292,6 +292,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(bottom: 90),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: challenges.length,
                   itemBuilder: (context, index) {
                     final challenge = challenges[index];

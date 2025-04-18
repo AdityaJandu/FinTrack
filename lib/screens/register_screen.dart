@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fin_track/components/my_text_form_field.dart';
 import 'package:fin_track/main.dart';
 import 'package:fin_track/models/users.dart';
 import 'package:fin_track/screens/login_screen.dart';
@@ -81,10 +82,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } finally {
         setState(() {
           isLoading = false;
-          _nameController.clear();
-          _emailController.clear();
-          _phoneNumberController.clear();
-          _passwordController.clear();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -114,100 +111,97 @@ class _RegisterScreenState extends State<RegisterScreen> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
+                  SizedBox(
+                    height: mq.height * .04,
+                  ),
                   const Text(
-                    "Sign-Up",
+                    "Register Now!",
                     style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      label: const Text("User name"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: appValidator.validateUserName,
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      label: const Text("e-Mail"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: appValidator.validateEmail,
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _phoneNumberController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      label: const Text("Phone Number"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: appValidator.validatePhoneNumber,
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      label: const Text("Password"),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: appValidator.validatePassword,
                   ),
                   const SizedBox(height: 40),
-                  SizedBox(
-                    height: 50,
-                    width: mq.width,
-                    child: ElevatedButton(
-                      onPressed: _submitForm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink.shade200,
-                        foregroundColor: Colors.black,
-                      ),
-                      child: isLoading
-                          ? const CircularProgressIndicator.adaptive()
-                          : const Text(
-                              "Submit",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                  MyTextFormField(
+                    controller: _nameController,
+                    validator: appValidator.validateUserName,
+                    description: 'User name',
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 20),
+                  MyTextFormField(
+                    controller: _emailController,
+                    description: 'e-Mail',
+                    validator: appValidator.validateEmail,
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 20),
+                  MyTextFormField(
+                    controller: _phoneNumberController,
+                    description: 'Phone Number',
+                    validator: appValidator.validatePhoneNumber,
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 20),
+                  MyTextFormField(
+                    controller: _passwordController,
+                    description: 'Password',
+                    validator: appValidator.validatePassword,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 40),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: mq.width * .05,
+                    ),
+                    child: SizedBox(
+                      height: 50,
+                      width: mq.width,
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pink.shade200,
+                          foregroundColor: Colors.black,
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator.adaptive()
+                            : const Text(
+                                "Submit",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                  const SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Already a member.",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
                       ),
-                    ),
-                  )
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Login now.",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
