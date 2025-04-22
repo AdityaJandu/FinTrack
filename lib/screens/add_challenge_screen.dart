@@ -125,87 +125,106 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
           "Create Challenge",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        backgroundColor: const Color(0xfffbc2eb),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: mq.height * .02),
-                TextFormField(
-                  controller: _titleController,
-                  enabled: !_isLoading,
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    labelText: "Challenge Title",
-                    hintText: "e.g., Save for New Phone",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  validator: _appValidator.validateTitle,
-                ),
-                SizedBox(height: mq.height * .02),
-                TextFormField(
-                  controller: _goalAmountController,
-                  enabled: !_isLoading,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Goal Amount (₹)",
-                    hintText: "e.g., 10000",
-                    prefixText: "₹ ",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  validator: _appValidator.validatePositiveNumber,
-                ),
-                SizedBox(height: mq.height * .02),
-                TextFormField(
-                  controller: _durationController,
-                  enabled: !_isLoading,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: "Target Duration (days)",
-                    hintText: "e.g., 60",
-                    suffixText: " days",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  validator: _appValidator.validatePositiveNumber,
-                ),
-                SizedBox(height: mq.height * .04),
-                ElevatedButton.icon(
-                  onPressed: _isLoading ? null : _createAndJoinChallenge,
-                  icon: _isLoading
-                      ? Container(
-                          width: 24,
-                          height: 24,
-                          padding: const EdgeInsets.all(2.0),
-                          child: const CircularProgressIndicator.adaptive(
-                              strokeWidth: 3,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white)),
-                        )
-                      : const Icon(Icons.add_task_rounded),
-                  label: Text(_isLoading ? "Creating..." : "Create & Join"),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(mq.width * .7, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-                SizedBox(height: mq.height * .02),
-              ],
+      body: Stack(
+        children: [
+          Container(
+            height: mq.height,
+            width: mq.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xfffbc2eb),
+                  Color(0xffa6c1ee),
+                ],
+                begin: Alignment(0, 0),
+                end: Alignment(1, 1),
+              ),
             ),
           ),
-        ),
+          SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: mq.height * .02),
+                    TextFormField(
+                      controller: _titleController,
+                      enabled: !_isLoading,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        labelText: "Challenge Title",
+                        hintText: "e.g., Save for New Phone",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      validator: _appValidator.validateTitle,
+                    ),
+                    SizedBox(height: mq.height * .02),
+                    TextFormField(
+                      controller: _goalAmountController,
+                      enabled: !_isLoading,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Goal Amount (₹)",
+                        hintText: "e.g., 10000",
+                        prefixText: "₹ ",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      validator: _appValidator.validatePositiveNumber,
+                    ),
+                    SizedBox(height: mq.height * .02),
+                    TextFormField(
+                      controller: _durationController,
+                      enabled: !_isLoading,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Target Duration (days)",
+                        hintText: "e.g., 60",
+                        suffixText: " days",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      validator: _appValidator.validatePositiveNumber,
+                    ),
+                    SizedBox(height: mq.height * .04),
+                    ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _createAndJoinChallenge,
+                      icon: _isLoading
+                          ? Container(
+                              width: 24,
+                              height: 24,
+                              padding: const EdgeInsets.all(2.0),
+                              child: const CircularProgressIndicator.adaptive(
+                                  strokeWidth: 3,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white)),
+                            )
+                          : const Icon(Icons.add_task_rounded),
+                      label: Text(_isLoading ? "Creating..." : "Create & Join"),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(mq.width * .7, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: mq.height * .02),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

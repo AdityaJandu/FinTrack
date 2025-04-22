@@ -57,18 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const AddTransactionScreen(),
-            ),
-          );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const AddTransactionScreen()));
         },
-        child: const Icon(
-          Icons.add,
-        ),
+        tooltip: "Add New Transaction",
+        icon: const Icon(Icons.add),
+        label: const Text("Add"),
       ),
     );
   }

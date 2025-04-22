@@ -240,147 +240,172 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           ),
         ),
         centerTitle: false,
+        backgroundColor: const Color(0xfffbc2eb),
+        automaticallyImplyLeading: false,
       ),
-      body: StreamBuilder<List<Challenge>>(
-        stream: _challengeService.getChallengesWithUserProgress(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          }
+      body: Stack(
+        children: [
+          Container(
+            height: mq.height,
+            width: mq.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xfffbc2eb),
+                  Color(0xffa6c1ee),
+                ],
+                begin: Alignment(0, 0),
+                end: Alignment(1, 1),
+              ),
+            ),
+          ),
+          StreamBuilder<List<Challenge>>(
+            stream: _challengeService.getChallengesWithUserProgress(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
+              }
 
-          if (snapshot.hasError) {
-            log("StreamBuilder Error: ${snapshot.error}",
-                error: snapshot.error, stackTrace: snapshot.stackTrace);
-            return Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text("Error loading challenges: ${snapshot.error}",
-                        textAlign: TextAlign.center)));
-          }
-
-          if (!snapshot.hasData ||
-              snapshot.data == null ||
-              snapshot.data!.isEmpty) {
-            int totalSavings =
-                snapshot.data?.fold<int>(0, (sum, c) => sum + c.savedAmount) ??
-                    0;
-            return Column(
-              children: [
-                _buildTotalSavingsCard(totalSavings),
-                const Expanded(
-                  child: Center(
+              if (snapshot.hasError) {
+                log("StreamBuilder Error: ${snapshot.error}",
+                    error: snapshot.error, stackTrace: snapshot.stackTrace);
+                return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Text(
-                          "No active challenges found.\nTap '+' to create one!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, color: Colors.grey)),
-                    ),
-                  ),
-                )
-              ],
-            );
-          }
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                            "Error loading challenges: ${snapshot.error}",
+                            textAlign: TextAlign.center)));
+              }
 
-          var challenges = snapshot.data!;
-          int totalSavings = challenges.fold<int>(
-              0, (sum, challenge) => sum + challenge.savedAmount);
-
-          return Column(
-            children: [
-              _buildTotalSavingsCard(totalSavings),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 90),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: challenges.length,
-                  itemBuilder: (context, index) {
-                    final challenge = challenges[index];
-                    final remainingAmount =
-                        (challenge.goalAmount - challenge.savedAmount)
-                            .clamp(0, challenge.goalAmount);
-
-                    return Dismissible(
-                      key: Key(challenge.id),
-                      direction: DismissDirection.endToStart,
-                      background: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5.0, vertical: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red.shade400,
-                              borderRadius: BorderRadius.circular(10)),
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: const Icon(Icons.delete_outline,
-                              color: Colors.white),
+              if (!snapshot.hasData ||
+                  snapshot.data == null ||
+                  snapshot.data!.isEmpty) {
+                int totalSavings = snapshot.data
+                        ?.fold<int>(0, (sum, c) => sum + c.savedAmount) ??
+                    0;
+                return Column(
+                  children: [
+                    _buildTotalSavingsCard(totalSavings),
+                    const Expanded(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                              "No active challenges found.\nTap '+' to create one!",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey)),
                         ),
                       ),
-                      confirmDismiss: (direction) async {
-                        bool? confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Delete Challenge?"),
-                            content: Text(
-                                "Are you sure you want to delete the '${challenge.title}' challenge?"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text("Cancel")),
-                              TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text("Delete",
-                                      style: TextStyle(color: Colors.red))),
-                            ],
+                    )
+                  ],
+                );
+              }
+
+              var challenges = snapshot.data!;
+              int totalSavings = challenges.fold<int>(
+                  0, (sum, challenge) => sum + challenge.savedAmount);
+
+              return Column(
+                children: [
+                  _buildTotalSavingsCard(totalSavings),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 90),
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: challenges.length,
+                      itemBuilder: (context, index) {
+                        final challenge = challenges[index];
+                        final remainingAmount =
+                            (challenge.goalAmount - challenge.savedAmount)
+                                .clamp(0, challenge.goalAmount);
+
+                        return Dismissible(
+                          key: Key(challenge.id),
+                          direction: DismissDirection.endToStart,
+                          background: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.red.shade400,
+                                  borderRadius: BorderRadius.circular(10)),
+                              alignment: Alignment.centerRight,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: const Icon(Icons.delete_outline,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          confirmDismiss: (direction) async {
+                            bool? confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Delete Challenge?"),
+                                content: Text(
+                                    "Are you sure you want to delete the '${challenge.title}' challenge?"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text("Cancel")),
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text("Delete",
+                                          style: TextStyle(color: Colors.red))),
+                                ],
+                              ),
+                            );
+                            return confirm ?? false;
+                          },
+                          onDismissed: (direction) {
+                            _deleteChallenge(challenge);
+                          },
+                          child: ChallengeCard(
+                            challenge: challenge,
+                            remainingAmount: remainingAmount,
+                            onAddSavings: challenge.isCompleted
+                                ? null
+                                : () {
+                                    _showAddSavingsDialog(
+                                        challenge, remainingAmount);
+                                  },
+                            onJoin: challenge.isJoined || challenge.isCompleted
+                                ? null
+                                : () async {
+                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                "Joining '${challenge.title}'...")));
+                                    bool success = await _challengeService
+                                        .joinChallenge(challenge.id);
+                                    if (!mounted) return;
+                                    if (success) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Joined '${challenge.title}'!")));
+                                      setState(() {});
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text("Error joining."),
+                                              backgroundColor: Colors.red));
+                                    }
+                                  },
                           ),
                         );
-                        return confirm ?? false;
                       },
-                      onDismissed: (direction) {
-                        _deleteChallenge(challenge);
-                      },
-                      child: ChallengeCard(
-                        challenge: challenge,
-                        remainingAmount: remainingAmount,
-                        onAddSavings: challenge.isCompleted
-                            ? null
-                            : () {
-                                _showAddSavingsDialog(
-                                    challenge, remainingAmount);
-                              },
-                        onJoin: challenge.isJoined || challenge.isCompleted
-                            ? null
-                            : () async {
-                                if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            "Joining '${challenge.title}'...")));
-                                bool success = await _challengeService
-                                    .joinChallenge(challenge.id);
-                                if (!mounted) return;
-                                if (success) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              "Joined '${challenge.title}'!")));
-                                  setState(() {});
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text("Error joining."),
-                                          backgroundColor: Colors.red));
-                                }
-                              },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
