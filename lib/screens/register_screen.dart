@@ -97,116 +97,131 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     mq = MediaQuery.sizeOf(context);
     return Scaffold(
-      backgroundColor: Colors.pink.shade50,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 40,
-            ),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: mq.height * .04,
-                  ),
-                  const Text(
-                    "Register Now!",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  MyTextFormField(
-                    controller: _nameController,
-                    validator: appValidator.validateUserName,
-                    description: 'User name',
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 20),
-                  MyTextFormField(
-                    controller: _emailController,
-                    description: 'e-Mail',
-                    validator: appValidator.validateEmail,
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 20),
-                  MyTextFormField(
-                    controller: _phoneNumberController,
-                    description: 'Phone Number',
-                    validator: appValidator.validatePhoneNumber,
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 20),
-                  MyTextFormField(
-                    controller: _passwordController,
-                    description: 'Password',
-                    validator: appValidator.validatePassword,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 40),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: mq.width * .05,
-                    ),
-                    child: SizedBox(
-                      height: 50,
-                      width: mq.width,
-                      child: ElevatedButton(
-                        onPressed: _submitForm,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pink.shade200,
-                          foregroundColor: Colors.black,
-                        ),
-                        child: isLoading
-                            ? const CircularProgressIndicator.adaptive()
-                            : const Text(
-                                "Submit",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Already a member.",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Login now.",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-        ),
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 40,
+                ),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: mq.height * .04,
+                      ),
+                      const Text(
+                        "Register Now!",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      MyTextFormField(
+                        controller: _nameController,
+                        validator: appValidator.validateUserName,
+                        description: 'User name',
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextFormField(
+                        controller: _emailController,
+                        description: 'e-Mail',
+                        validator: appValidator.validateEmail,
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextFormField(
+                        controller: _phoneNumberController,
+                        description: 'Phone Number',
+                        validator: appValidator.validatePhoneNumber,
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextFormField(
+                        controller: _passwordController,
+                        description: 'Password',
+                        validator: appValidator.validatePassword,
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 40),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: mq.width * .05,
+                        ),
+                        child: SizedBox(
+                          height: 50,
+                          width: mq.width,
+                          child: ElevatedButton(
+                            onPressed: _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink.shade200,
+                              foregroundColor: Colors.black,
+                            ),
+                            child: isLoading
+                                ? const CircularProgressIndicator.adaptive()
+                                : const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already a member.",
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Login now.",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

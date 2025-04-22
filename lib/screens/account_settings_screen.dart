@@ -32,22 +32,20 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        backgroundColor: const Color(0xfffbc2eb),
+        backgroundColor: const Color(0xfffad0c4),
         centerTitle: false,
       ),
       body: Stack(
         children: [
           Container(
-            height: mq.height,
-            width: mq.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xfffbc2eb),
-                  Color(0xffa6c1ee),
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
@@ -65,7 +63,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const ProfileScreen(),
+                    builder: (_) => ProfileScreen(),
                   ),
                 ),
                 child: const ProfileMenuItems(

@@ -59,119 +59,134 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     mq = MediaQuery.sizeOf(context);
     return Scaffold(
-      backgroundColor: Colors.pink.shade50,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 40,
-            ),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: mq.height * .04,
-                  ),
-                  const Text(
-                    "Login Now!",
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  MyTextFormField(
-                    controller: _emailController,
-                    validator: appValidator.validateEmail,
-                    description: 'e-Mail',
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 20),
-                  MyTextFormField(
-                    controller: _passwordController,
-                    validator: appValidator.validatePassword,
-                    description: 'Password',
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-                  // Forgot Password
-                  Padding(
-                    padding: EdgeInsets.only(left: mq.width * .47),
-                    child: const Text(
-                      "Forgot Password",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: mq.width * .05,
-                    ),
-                    child: SizedBox(
-                      height: 50,
-                      width: mq.width,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _submitForm(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pink.shade200,
-                          foregroundColor: Colors.black,
-                        ),
-                        child: isLoading
-                            ? const CircularProgressIndicator.adaptive()
-                            : const Text(
-                                "Submit",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Not a member?",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const RegisterScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Register now.",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-        ),
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 40,
+                ),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: mq.height * .04,
+                      ),
+                      const Text(
+                        "Login Now!",
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      MyTextFormField(
+                        controller: _emailController,
+                        validator: appValidator.validateEmail,
+                        description: 'e-Mail',
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextFormField(
+                        controller: _passwordController,
+                        validator: appValidator.validatePassword,
+                        description: 'Password',
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 20),
+                      // Forgot Password
+                      Padding(
+                        padding: EdgeInsets.only(left: mq.width * .47),
+                        child: const Text(
+                          "Forgot Password",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: mq.width * .05,
+                        ),
+                        child: SizedBox(
+                          height: 50,
+                          width: mq.width,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _submitForm(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink.shade200,
+                              foregroundColor: Colors.black,
+                            ),
+                            child: isLoading
+                                ? const CircularProgressIndicator.adaptive()
+                                : const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Not a member?",
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RegisterScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Register now.",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

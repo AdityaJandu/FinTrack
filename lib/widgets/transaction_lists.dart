@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/components/transaction_card.dart';
+import 'package:fin_track/models/transaction_model.dart';
 import 'package:fin_track/services/transaction_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -102,10 +103,10 @@ class TransactionLists extends StatelessWidget {
                 },
                 onDismissed: (direction) {
                   _service.deleteTransaction(
-                    transactionId: cardData.id,
-                    amount: cardData['amount'],
-                    transactionType: cardData['type'],
-                  );
+                      transactionId: cardData.id,
+                      amount: cardData['amount'],
+                      transactionType: cardData['type'],
+                      context: context);
                 },
                 child: TransactionCard(
                   cardData: cardData,

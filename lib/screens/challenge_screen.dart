@@ -240,22 +240,20 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           ),
         ),
         centerTitle: false,
-        backgroundColor: const Color(0xfffbc2eb),
+        backgroundColor: const Color(0xfffad0c4),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           Container(
-            height: mq.height,
-            width: mq.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xfffbc2eb),
-                  Color(0xffa6c1ee),
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
@@ -292,10 +290,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Text(
-                              "No active challenges found.\nTap '+' to create one!",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.grey)),
+                            "No active challenges found.\nTap '+' to create one!",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     )

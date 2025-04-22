@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../models/transaction_model.dart';
@@ -183,7 +184,15 @@ class TransactionService {
     required String transactionId,
     required int amount,
     required String transactionType,
+    required BuildContext context,
   }) async {
+    // Just to show that deletion started:
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Deleting Transaction..."),
+        duration: Duration(milliseconds: 500),
+      ),
+    );
     User? user = getCurrentUser();
     if (user == null) throw Exception("User not logged in");
 
@@ -202,6 +211,14 @@ class TransactionService {
       remainingAmount += amount;
       totalDebit -= amount;
     }
+
+    // On success:
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Transaction deleted successfully."),
+        backgroundColor: Colors.green,
+      ),
+    );
 
     // Update user balance
     await updateUserBalance(

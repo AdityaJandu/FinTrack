@@ -32,7 +32,10 @@ class RecentTransaction extends StatelessWidget {
           return const Text("Loading.");
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Text("No transactions found.");
+          return const Text(
+            "\n\n\nNo transactions found.\nTap '+' to add new transaction now.",
+            textAlign: TextAlign.center,
+          );
         }
 
         var data = snapshot.data!.docs;
@@ -83,6 +86,7 @@ class RecentTransaction extends StatelessWidget {
                   transactionId: cardData.id,
                   amount: cardData['amount'],
                   transactionType: cardData['type'],
+                  context: context,
                 );
               },
               child: TransactionCard(

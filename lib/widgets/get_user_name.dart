@@ -8,8 +8,14 @@ To get the name of the user and other user details for building profile of the u
 */
 
 class GetUserName extends StatelessWidget {
-  const GetUserName({super.key, required this.documentId});
+  const GetUserName(
+      {super.key,
+      required this.documentId,
+      required this.size,
+      required this.requiredField});
   final String documentId;
+  final double size;
+  final String requiredField;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +37,13 @@ class GetUserName extends StatelessWidget {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
           return Text(
-            "Hi, ${capitalize(data['name'])}",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            requiredField == 'name'
+                ? capitalize(data[requiredField])
+                : data[requiredField],
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: size,
+            ),
           );
         }
 

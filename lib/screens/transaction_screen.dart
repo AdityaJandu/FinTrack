@@ -1,4 +1,3 @@
-import 'package:fin_track/main.dart';
 import 'package:fin_track/services/auth_services.dart';
 import 'package:fin_track/widgets/catergory_lists.dart';
 import 'package:fin_track/components/my_tab_bar.dart';
@@ -42,22 +41,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ),
         centerTitle: false,
-        backgroundColor: const Color(0xfffbc2eb),
+        backgroundColor: const Color(0xfffad0c4),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           Container(
-            height: mq.height,
-            width: mq.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xfffbc2eb),
-                  Color(0xffa6c1ee),
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),

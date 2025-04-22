@@ -22,25 +22,35 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: const Color(0xfffbc2eb),
+        backgroundColor: const Color(0xfffad0c4),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: GetUserName(documentId: userDetails),
+          child: Row(
+            children: [
+              const Text(
+                'Hi, ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              GetUserName(
+                documentId: userDetails,
+                size: 22,
+                requiredField: 'name',
+              ),
+            ],
+          ),
         ),
       ),
       body: Stack(
         children: [
           Container(
-            height: mq.height,
-            width: mq.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xfffbc2eb),
-                  Color(0xffa6c1ee),
+                  Color(0xfffad0c4),
+                  Color(0xffffd1ff),
                 ],
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
