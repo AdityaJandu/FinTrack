@@ -4,6 +4,7 @@ import 'package:fin_track/widgets/get_user_name.dart';
 import 'package:fin_track/widgets/hero_card.dart';
 import 'package:fin_track/widgets/transaction_part.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +16,40 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final String userDetails = FirebaseAuth.instance.currentUser!.uid;
+
+  void onPressed() {
+    showAdaptiveDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Tips',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const SingleChildScrollView(
+            child: Text(
+              "Just to update your already added transactions long press and you'll be directed to Update Screen.",
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 documentId: userDetails,
                 size: 22,
                 requiredField: 'name',
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: onPressed,
+                icon: const Icon(
+                  CupertinoIcons.lightbulb,
+                ),
               ),
             ],
           ),

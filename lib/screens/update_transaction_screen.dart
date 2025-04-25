@@ -1,19 +1,25 @@
 import 'package:fin_track/main.dart';
+import 'package:fin_track/services/transaction_services.dart';
 import 'package:fin_track/utils/app_validator.dart';
+import 'package:fin_track/widgets/catergory_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../services/transaction_services.dart';
-import '../widgets/catergory_dropdown.dart';
-
-class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+class UpdateTransactionScreen extends StatefulWidget {
+  const UpdateTransactionScreen(
+      {super.key,
+      required this.id,
+      required this.previousType,
+      required this.previousAmount});
+  final String id, previousType;
+  final int previousAmount;
 
   @override
-  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  State<UpdateTransactionScreen> createState() =>
+      _UpdateTransactionScreenState();
 }
 
-class _AddTransactionScreenState extends State<AddTransactionScreen> {
+class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
   var type = 'credit';
   var catergory = "others";
 
@@ -40,21 +46,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Adding Transaction..."),
+          content: Text("Transaction Updating..."),
         ),
       );
 
       try {
-        await TransactionService().addTransaction(
+        await TransactionService().updateTransaction(
+          transactionId: widget.id,
           title: titleController.text.trim(),
-          category: catergory,
+          category: type,
           amount: int.tryParse(ammountController.text) ?? 0,
           transactionType: type,
+          previousAmount: widget.previousAmount,
+          previousType: widget.previousType,
         );
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Transaction Added Successfully."),
+            content: Text("Transaction Updated Successfully."),
             backgroundColor: Colors.green,
           ),
         );
@@ -79,7 +88,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         centerTitle: false,
         backgroundColor: const Color(0xfffbc2eb),
         title: const Text(
-          "Add Transaction",
+          "Update Transaction",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -202,8 +211,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                       Colors.white)),
                             )
                           : const Icon(Icons.add_task_rounded),
-                      label:
-                          Text(isLoading ? "Creating..." : "Add Transaction"),
+                      label: Text(
+                          isLoading ? "Updating..." : "Update Transaction"),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(mq.width * .7, 50),
                         shape: RoundedRectangleBorder(

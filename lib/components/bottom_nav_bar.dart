@@ -25,14 +25,20 @@ class BottomNavBar extends StatelessWidget {
 
         /// Likes
         SalomonBottomBarItem(
-          icon: const Icon(Icons.favorite_border),
+          icon: Image.asset(
+            'assets/target.png',
+            scale: 18,
+          ),
           title: const Text("Challenge"),
           selectedColor: Colors.pink,
         ),
 
         /// Search
         SalomonBottomBarItem(
-          icon: const Icon(Icons.search),
+          icon: Image.asset(
+            'assets/transaction.png',
+            scale: 18,
+          ),
           title: const Text("Tranctions"),
           selectedColor: Colors.orange,
         ),
