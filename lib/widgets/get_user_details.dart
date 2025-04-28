@@ -7,8 +7,8 @@ To get the name of the user and other user details for building profile of the u
 
 */
 
-class GetUserName extends StatelessWidget {
-  const GetUserName(
+class GetUserDetails extends StatelessWidget {
+  const GetUserDetails(
       {super.key,
       required this.documentId,
       required this.size,

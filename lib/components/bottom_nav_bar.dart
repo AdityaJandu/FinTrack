@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -39,14 +40,14 @@ class BottomNavBar extends StatelessWidget {
             'assets/transaction.png',
             scale: 18,
           ),
-          title: const Text("Tranctions"),
-          selectedColor: Colors.orange,
+          title: const Text("Transactions"),
+          selectedColor: Colors.red,
         ),
 
         /// Profile
         SalomonBottomBarItem(
-          icon: const Icon(Icons.person),
-          title: const Text("Profile"),
+          icon: const Icon(CupertinoIcons.settings),
+          title: const Text("Settings"),
           selectedColor: Colors.teal,
         ),
       ],

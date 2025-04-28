@@ -140,6 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         validator: appValidator.validateUserName,
                         description: 'User name',
                         obscureText: false,
+                        keyboardType: TextInputType.name,
                       ),
                       const SizedBox(height: 20),
                       MyTextFormField(
@@ -147,6 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         description: 'e-Mail',
                         validator: appValidator.validateEmail,
                         obscureText: false,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       MyTextFormField(
@@ -154,6 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         description: 'Phone Number',
                         validator: appValidator.validatePhoneNumber,
                         obscureText: false,
+                        keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
                       MyTextFormField(
@@ -161,6 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         description: 'Password',
                         validator: appValidator.validatePassword,
                         obscureText: true,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 40),
                       Padding(

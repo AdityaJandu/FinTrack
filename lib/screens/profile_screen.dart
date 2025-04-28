@@ -1,6 +1,6 @@
 import 'package:fin_track/components/profile_component.dart';
 import 'package:fin_track/main.dart';
-import 'package:fin_track/widgets/get_user_name.dart';
+import 'package:fin_track/widgets/get_user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: mq.width * 0.05),
 
                 // User name:
-                GetUserName(
+                GetUserDetails(
                   documentId: userDetails,
                   size: 20,
                   requiredField: 'name',

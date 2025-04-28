@@ -7,11 +7,13 @@ class MyTextFormField extends StatelessWidget {
       required this.controller,
       required this.validator,
       required this.description,
-      required this.obscureText});
+      required this.obscureText,
+      required this.keyboardType});
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final String description;
   final bool obscureText;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class MyTextFormField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           label: Padding(
             padding: const EdgeInsets.only(left: 20.0),

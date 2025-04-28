@@ -103,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: appValidator.validateEmail,
                         description: 'e-Mail',
                         obscureText: false,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       MyTextFormField(
@@ -110,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: appValidator.validatePassword,
                         description: 'Password',
                         obscureText: true,
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       // Forgot Password

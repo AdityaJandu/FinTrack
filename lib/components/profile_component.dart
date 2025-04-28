@@ -1,4 +1,4 @@
-import 'package:fin_track/widgets/get_user_name.dart';
+import 'package:fin_track/widgets/get_user_details.dart';
 import 'package:flutter/material.dart';
 
 class ProfileComponent extends StatelessWidget {
@@ -19,7 +19,7 @@ class ProfileComponent extends StatelessWidget {
           '$description: ',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        GetUserName(
+        GetUserDetails(
           documentId: userDetails,
           size: 18,
           requiredField: requiredField,

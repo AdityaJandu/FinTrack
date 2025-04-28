@@ -1,31 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthServices {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  // For Registering using email and password
-  registerUser(data, context) async {
-    try {
-      return await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: data['email'],
-        password: data['password'],
-      );
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Sign-up failed try again!'),
-          content: Text(e.toString()),
-        ),
-      );
-    }
-  }
-
+  // Create a new user:
   createUser(String email, String password, context) async {
     try {
       return auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
     } catch (e) {
       showDialog(
         builder: (_) => AlertDialog(
@@ -43,6 +29,37 @@ class AuthServices {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: data['email'],
         password: data['password'],
+      );
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Login failed try again!'),
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
+  // Update details of a user:
+  Future<void> updateUserDetails({
+    required String name,
+    required String phoneNumber,
+    required String email,
+    required String uid,
+    context,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'name': name,
+        'email': email,
+        'phoneNumber': phoneNumber,
+      });
+      showDialog(
+        context: context,
+        builder: (_) => const AlertDialog(
+          title: Text('Updated Successfullly.'),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       showDialog(

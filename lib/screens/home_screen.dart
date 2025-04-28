@@ -1,6 +1,6 @@
 import 'package:fin_track/main.dart';
 import 'package:fin_track/screens/add_transaction_screen.dart';
-import 'package:fin_track/widgets/get_user_name.dart';
+import 'package:fin_track/widgets/get_user_details.dart';
 import 'package:fin_track/widgets/hero_card.dart';
 import 'package:fin_track/widgets/transaction_part.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,29 +18,29 @@ class _HomeScreenState extends State<HomeScreen> {
   final String userDetails = FirebaseAuth.instance.currentUser!.uid;
 
   void onPressed() {
-    showAdaptiveDialog(
+    showCupertinoDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
+        return CupertinoAlertDialog(
+          insetAnimationDuration: const Duration(milliseconds: 400),
+          insetAnimationCurve: Curves.bounceInOut,
           title: const Text(
             'Tips',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
           ),
           content: const SingleChildScrollView(
             child: Text(
               "Just to update your already added transactions long press and you'll be directed to Update Screen.",
-              style: TextStyle(
-                fontSize: 18,
-              ),
             ),
           ),
           actions: [
-            TextButton(
-              child: const Text('Continue'),
+            CupertinoDialogAction(
+              child: const Text(
+                'Continue',
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Hi, ',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              GetUserName(
+              GetUserDetails(
                 documentId: userDetails,
                 size: 22,
                 requiredField: 'name',
