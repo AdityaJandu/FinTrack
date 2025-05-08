@@ -64,11 +64,10 @@ class ChallengeCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Card(
-        elevation: isCompleted ? 1.5 : 3.5,
-        color: isCompleted ? Colors.green.shade50 : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: isCompleted ? Colors.green.shade50 : Colors.blueGrey.shade50,
         ),
         child: ListTile(
           contentPadding:

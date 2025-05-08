@@ -23,7 +23,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: const Text("🎉 Challenge Completed! 🎉",
@@ -94,7 +94,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             TextButton(
                 onPressed: () => Navigator.pop(dialogContext),
                 child: const Text("Cancel")),
-            ElevatedButton(
+            TextButton(
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
                   int amount = int.parse(amountController.text);
@@ -228,6 +228,23 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     }
   }
 
+  // Function to join:
+  onJoinFunc(challenge, context) async {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Joining '${challenge.title}'...")));
+    bool success = await _challengeService.joinChallenge(challenge.id);
+    if (!mounted) return;
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Joined '${challenge.title}'!")));
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Error joining."), backgroundColor: Colors.red));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -261,8 +278,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             stream: _challengeService.getChallengesWithUserProgress(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child: CircularProgressIndicator.adaptive());
+                return Center(
+                  child: Transform.scale(
+                    scale: 1.5,
+                    child: const CircularProgressIndicator.adaptive(),
+                  ),
+                );
               }
 
               if (snapshot.hasError) {
@@ -371,27 +392,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                                   },
                             onJoin: challenge.isJoined || challenge.isCompleted
                                 ? null
-                                : () async {
-                                    if (!mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Joining '${challenge.title}'...")));
-                                    bool success = await _challengeService
-                                        .joinChallenge(challenge.id);
-                                    if (!mounted) return;
-                                    if (success) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "Joined '${challenge.title}'!")));
-                                      setState(() {});
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text("Error joining."),
-                                              backgroundColor: Colors.red));
-                                    }
+                                : () {
+                                    onJoinFunc(challenge, context);
                                   },
                           ),
                         );
