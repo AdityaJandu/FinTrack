@@ -180,12 +180,11 @@ class TransactionService {
   }
 
   // Delete a transaction
-  Future<void> deleteTransaction({
-    required String transactionId,
-    required int amount,
-    required String transactionType,
-    required BuildContext context,
-  }) async {
+  Future<void> deleteTransaction(
+      {required String transactionId,
+      required int amount,
+      required String transactionType,
+      context}) async {
     // Just to show that deletion started:
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

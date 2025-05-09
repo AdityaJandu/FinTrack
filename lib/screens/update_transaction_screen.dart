@@ -38,7 +38,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
     super.dispose();
   }
 
-  Future<void> _submitForm() async {
+  Future<void> _submitForm(context) async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -199,7 +199,7 @@ class _UpdateTransactionScreenState extends State<UpdateTransactionScreen> {
                       height: mq.height * .02,
                     ),
                     ElevatedButton.icon(
-                      onPressed: isLoading ? null : _submitForm,
+                      onPressed: isLoading ? null : () => _submitForm(context),
                       icon: isLoading
                           ? Container(
                               width: 24,

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fin_track/components/my_text_form_field.dart';
 import 'package:fin_track/main.dart';
@@ -7,6 +5,7 @@ import 'package:fin_track/models/users.dart';
 import 'package:fin_track/screens/login_screen.dart';
 import 'package:fin_track/services/auth_services.dart';
 import 'package:fin_track/utils/app_validator.dart';
+import 'package:fin_track/widgets/auth_gate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  Future<void> _submitForm() async {
+  Future<void> _submitForm(context) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -82,12 +81,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } finally {
         setState(() {
           isLoading = false;
+
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const LoginScreen(),
-            ),
-          );
+              context, MaterialPageRoute(builder: (_) => const AuthGate()));
         });
       }
     }
@@ -175,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 50,
                           width: mq.width,
                           child: ElevatedButton(
-                            onPressed: _submitForm,
+                            onPressed: () => _submitForm(context),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.pink.shade200,
                               foregroundColor: Colors.black,
