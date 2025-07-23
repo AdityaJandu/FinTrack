@@ -70,45 +70,46 @@ The project follows a standard Flutter project structure:
 
 ```
 lib/
-├── components/              # Reusable UI widgets and custom components
-│   ├── alert_dialogs.dart
-│   ├── back_ground_animations.dart
-│   ├── back_ground_blur.dart
-│   ├── button_animation.dart
-│   ├── curved_bar.dart
-│   ├── gradient_text.dart
-│   ├── my_buttons.dart
-│   ├── my_drawer.dart
-│   ├── my_text_fields.dart
-│   ├── positioned_image.dart
-│   ├── rich_text_span.dart
-│   └── widget_tiles.dart
+├── components/              # Reusable UI components like nav bars, cards, icons, text fields, etc.
+│   ├── bottom_nav_bar.dart
+│   ├── credit_debit_card.dart
+│   └── ...
 │
-├── screens/
-│   ├── ai_intergration/     # AI-based features
-│   │   ├── image_generate.dart
-│   │   └── math_notes.dart
-│   │
-│   ├── auth/                # Authentication and user management
-│   │   ├── auth_gate.dart
-│   │   ├── auth_service.dart
-│   │   ├── login_screen.dart
-│   │   └── register_screen.dart
-│   │
-│   ├── core_ui/             # Main UI screens
-│   │   ├── feature_screen.dart
-│   │   ├── home_screen.dart
-│   │   ├── info_screen.dart
-│   │   ├── profile_screen.dart
-│   │   └── splash_screen.dart
-│   │
-│   └── gallery_and_camera/  # Media handling screens
-│       ├── album_screen.dart
-│       ├── camera_screen.dart
-│       └── view_picture_screen.dart
+├── models/                  # Data models for users, transactions, and challenges
+│   ├── challenge.dart
+│   ├── transaction_model.dart
+│   └── users.dart
 │
-├── firebase_options.dart    # Firebase configuration
-└── main.dart                # App entry point
+├── screens/                 # All the main UI screens
+│   ├── dash_board.dart
+│   ├── home_screen.dart
+│   ├── login_screen.dart
+│   ├── register_screen.dart
+│   ├── transaction_screen.dart
+│   ├── add_transaction_screen.dart
+│   ├── update_transaction_screen.dart
+│   ├── challenge_screen.dart
+│   ├── add_challenge_screen.dart
+│   ├── profile_screen.dart
+│   └── account_settings_screen.dart
+│
+├── services/                # Firebase interaction services
+│   ├── auth_services.dart
+│   ├── transaction_services.dart
+│   └── challenge_services.dart
+│
+├── utils/                   # Utility classes for icons and validators
+│   ├── app_icons.dart
+│   └── app_validator.dart
+│
+├── widgets/                 # Smaller reusable widgets like dropdowns, lists, cards, etc.
+│   ├── category_dropdown.dart
+│   ├── transaction_lists.dart
+│   ├── recent_transaction.dart
+│   └── ...
+│
+├── firebase_options.dart    # Firebase configuration file (auto-generated)
+└── main.dart                # Application entry point
 
 ```
 
