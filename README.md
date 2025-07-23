@@ -38,7 +38,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
     ```sh
     git clone https://github.com/AdityaJandu/FinTrack.git
-    cd fintrack
+    cd FinTrack
     ```
 
 2.  **Set up Firebase:**
