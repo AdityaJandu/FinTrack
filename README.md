@@ -1,7 +1,3 @@
-Of course. Here is a comprehensive `README.md` file tailored for your FinTrack application. You can copy and paste this directly into a `README.md` file on GitHub.
-
------
-
 # FinTrack 💸
 
 A cross-platform personal finance manager built with Flutter and Firebase to help you track your income, expenses, and savings goals seamlessly.
@@ -24,14 +20,6 @@ A cross-platform personal finance manager built with Flutter and Firebase to hel
   * **Frontend:** [Flutter](https://flutter.dev/)
   * **Backend & Database:** [Firebase](https://firebase.google.com/) (Authentication, Firestore)
   * **Language:** [Dart](https://dart.dev/)
-
------
-
-## 📸 Screenshots
-
-| Dashboard                                | Transactions List                           | Add Transaction                               |
-| ---------------------------------------- | ------------------------------------------- | --------------------------------------------- |
-| *[Insert Dashboard Screenshot Here]* | *[Insert Transactions List Screenshot Here]* | *[Insert Add Transaction Modal Screenshot Here]* |
 
 -----
 
